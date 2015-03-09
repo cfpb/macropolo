@@ -217,6 +217,10 @@ this:
     "macro_name": "<a macro>",
     "arguments": [ ... ],
     "keyword_arguments": { ... },
+    "context": {
+        "<context variable>": "<value>",
+        ...
+    }
     "filters": {
         "<filter name>": "<mock value>",
         "<filter name>": ["<first call mock value>",
@@ -231,10 +235,10 @@ this:
         {
             "selector": "<css selector>",
             "index": <1>,
-            "value": "<string contained>"
+            "value": "<string contained>",
             "assertion": "<equal>",
-            "attribute": "<class>"
-        }
+            "attribute": "<attribute name>",
+        "
     ]
 }
 ```
@@ -247,6 +251,9 @@ they are given. This is optional.
 
 **`keyword_arguments`** is an object containing key/value arguments to pass
 to the macro if it requires keyword arguments. This is optional.
+
+**`context`** is an object containing names of context variables to add
+to the template's context and values to assign to those variables.
 
 **`filters`** is an object that is used to mock template system filters. 
 It contains the name of the filter to be mocked and the value that should

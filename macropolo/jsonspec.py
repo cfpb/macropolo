@@ -17,6 +17,10 @@ def JSONSpecTestCaseFactory(name, super_class, json_file, mixins=[]):
             "macro_name": "<a macro>",
             "arguments": [ ... ],
             "keyword_arguments": { ... },
+            "context": {
+                "<context variable>": "<value>",
+                ...
+            }
             "filters": {
                 "<filter name>": "<mock value>",
                 "<filter name>": ["<first call mock value>",
@@ -50,7 +54,7 @@ def JSONSpecTestCaseFactory(name, super_class, json_file, mixins=[]):
     Assertions can be any of the following:
         * equal
         * not equal
-        * exists
+        * exis]s
         * in
         * not in
 
@@ -86,6 +90,15 @@ def JSONSpecTestCaseFactory(name, super_class, json_file, mixins=[]):
     # from the JSON spec.
     def create_test_method(macro_file, macro_name, test_dict):
         def test_method(self):
+            # Add any context variables to the context
+            [self.add_context(k, v) for k,v in test_dict.get('context', {}).items()]
+
+            # Mock the filters and context functions
+            filters = test_dict.get('mock_filters', {})
+            [self.mock_filter(f, v) for f,v in filters.items()]
+            context_functions = test_dict.get('mock_context_functions', {})
+            [self.mock_context_function(f, v) for f,v in context_functions.items()]
+
             # Render the macro from the macro file with the given
             # arguments
             args = test_dict.get('arguments', [])

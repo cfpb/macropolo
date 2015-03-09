@@ -31,6 +31,20 @@ class Jinja2Environment(object):
         self.context = {}
 
 
+    def add_filter(self, name, filter):
+        """
+        Add the given filter to the template environment.
+        """
+        self.env.filters[name] = filter
+
+
+    def add_context(self, name, value):
+        """
+        Add the given name/value to the template environment context.
+        """
+        self.context[name] = value
+
+
     def render_macro(self, macro_file, macro, *args, **kwargs):
         """
         Render a given macro with the given arguments and keyword

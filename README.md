@@ -1,98 +1,385 @@
-#### CFPB Open Source Project Template Instructions
+# Macro Polo
 
-1. Create a new project.
-2. Copy these files into the new project.
-3. Update the README, replacing the contents below as prescribed.
-4. Add any libraries, assets, or hard dependencies whose source code will be included
-   in the project's repository to the _Exceptions_ section in the [TERMS](TERMS.md).
-  - If no exceptions are needed, remove that section from TERMS.
-5. If working with an existing code base, answer the questions on the [open source checklist](opensource-checklist.md) 
-6. Delete these instructions and everything up to the _Project Title_ from the README.
-7. Write some great software and tell people about it.
+Macro Polo is a Python library for unit testing template macros created 
+using popular Python templating systems.
 
-> Keep the README fresh! It's the first thing people see and will make the initial impression.
+Templating systems/environments currently supported:
 
-----
+- [Jinja2](http://jinja.pocoo.org/)
+- [Jinja2 Templates served via Sheer](https://github.com/cfpb/sheer)
 
-# Project Title
+**Status:** Proof of concept
 
-**Description**:  Put a meaningful, short, plain-language description of what
-this project is trying to accomplish and why it matters. 
-Describe the problem(s) this project solves.
-Describe how this software can improve the lives of its audience.
+## Requirements
 
-Other things to include:
+Requirements can be satisfied with `pip`:
 
-  - **Technology stack**: Indicate the technological nature of the software, including primary programming language(s) and whether the software is intended as standalone or as a module in a framework or other ecosystem.
-  - **Status**:  Alpha, Beta, 1.1, etc. It's OK to write a sentence, too. The goal is to let interested people know where this project is at. This is also a good place to link to the [CHANGELOG](CHANGELOG.md).
-  - **Links to production or demo instances**
-  - Describe what sets this apart from related-projects. Linking to another doc or page is OK if this can't be expressed in a sentence or two.
+```shell
+$ pip install -r requirements.txt
+```
 
+- [BeautifulSoup 4](http://www.crummy.com/software/BeautifulSoup/) for
+  handling the HTML resulting from template rendering
+- [Python mock](http://www.voidspace.org.uk/python/mock/) for mocking
+  template filters and context (and unit testing Macro Polo itself)
 
-**Screenshot**: If the software has visual components, place a screenshot after the description; e.g.,
-
-![](https://raw.githubusercontent.com/cfpb/open-source-project-template/master/screenshot.png)
-
-
-## Dependencies
-
-Describe any dependencies that must be installed for this software to work. 
-This includes programming languages, databases or other storage mechanisms, build tools, frameworks, and so forth.
-If specific versions of other software are required, or known not to work, call that out.
+Template Systems/Environments:
+- [Jinja2](http://jinja.pocoo.org/)
+- [Sheer](https://github.com/cfpb/sheer)
 
 ## Installation
 
-Detailed instructions on how to install, configure, and get the project running.
-This should be frequently tested to ensure reliability. Alternatively, a link to
-another page is fine, but it's important that this works.
+To clone and install Macro Polo locally in an existing Python 
+[`virtualenv`](https://virtualenv.pypa.io/en/latest/):
 
-## Configuration
+```shell
+$ git clone https://github.com/cfpb/macropolo
+$ pip install -e macropolo
+```
 
-If the software is configurable, describe it in detail, either here or in other documentation to which you link.
+Note: this installs Macro Polo in 'editable' mode. This means that any
+updates pulled into the git clone will be 'live' without running `pip`
+again.
 
-## Usage
+Macro Polo can also be installed directly from Github:
 
-Show users how to use the software. 
-Be specific. 
-Use appropriate formatting when showing code snippets.
+```shell
+$ pip install git+https://github.com/cfpb/macropolo
+```
 
-## How to test the software
+### Unit Testing vs Functional Testing
 
-If the software includes automated tests, detail how to run those tests.
+Macro Polo is designed for unit testing template macros. Macro Polo 
+is meant to make it easier to express tests of the resulting HTML of 
+individual template macros (units) within a specific context or with
+specific inputs. Unit testing macros tests them individually in 
+isolation. 
 
-## Known issues
+If you're looking at a template and want to test JavaScript-related 
+behavior that occurs within that template's resulting HTML, you want 
+to investigate functional testing tools and frameworks.
 
-Document any known significant shortcomings with the software.
+## Using Macro Polo
 
-## Getting help
+### Quickstart
 
-Instruct users how to get help with this software; this might include links to an issue tracker, wiki, mailing list, etc.
+Create a Python file with the rest of your test suite, such as
+`test_templates.py`. This file will need to define a 
+[base test case](#creating-a-base-testcase-class),
+load template tests from JSON, and (optionally) use Python's
+`unittest.main()` to [run the tests](#running-tests):
 
-**Example**
+```python
+from macropolo import MacroTestCase, Jinja2Environment
+from macropolo import JSONTestCaseLoader
 
-If you have questions, concerns, bug reports, etc, please file an issue in this repository's Issue Tracker.
+class MyBaseTestCase(Jinja2Environment, MacroTestCase):
+    """
+    A MacroTestCase subclass for my Jinja2 Templates.
+    """
 
-## Getting involved
+    def search_root(self):
+        """
+        Return the root of the search path for templates.
+        """
+        # If the tests live under 'site_root/tests'...
+        root_dir = os.path.abspath(os.path.join(os.path.dirname( __file__ ),
+                                                os.pardir))
+        return root_dir
 
-This section should detail why people should get involved and describe key areas you are
-currently focusing on; e.g., trying to get feedback on features, fixing certain bugs, building
-important pieces, etc.
+    def search_exceptions(self):
+        """
+        Return a list of a subdirectory names that should not be searched
+        for templates.
+        """
+        return ['tests',]
 
-General instructions on _how_ to contribute should be stated with a link to [CONTRIBUTING](CONTRIBUTING.md).
+# Create MyTestCase subclasses for all JSON tests and add them to the
+# module's global context.
+tests_path = os.path.abspath(os.path.join(os.path.dirname( __file__ ), 'template_tests'))
+JSONTestCaseLoader(tests_path, MyBaseTestCase, globals())
+
+# Run the tests if we're executed
+if __name__ == '__main__':
+    unittest.main()
+```
+
+Then create your [JSON test specifications](#defining-tests-in-json) in
+the `template_tests` subdirectory of `tests`.
+
+### Creating a Base TestCase Class
+
+Test Case classes should inherit from a
+[template environment mixin](#template-environment-mixins), the
+[`MacroTestCase`](#macrotestcase) class, and should provide the 
+following methods:
+
+##### `search_root()`
+
+Return the root of the search path for templates.
+
+##### `search_exceptions()`
+
+Return a list of a subdirectory names that should not be searched
+for templates.
+
+For Example:
+
+```python
+from macropolo import MacroTestCase, Jinja2Environment
+
+class MyBaseTestCase(Jinja2Environment, MacroTestCase):
+    """
+    A MacroTestCase subclass for my Jinja2 Templates.
+    """
+
+    def search_root(self):
+        """
+        Return the root of the search path for templates.
+        """
+        # If the tests live under 'site_root/tests'...
+        root_dir = os.path.abspath(os.path.join(os.path.dirname( __file__ ),
+                                                os.pardir))
+        return root_dir
+
+    def search_exceptions(self):
+        """
+        Return a list of a subdirectory names that should not be searched
+        for templates.
+        """
+        return ['tests',]
+```
 
 
-----
+### Defining Tests in JSON
 
-## Open source licensing info
-1. [TERMS](TERMS.md)
-2. [LICENSE](LICENSE)
+To reduce the amount of boilerplate Python that needs to be written for
+macro unit tests, unit tests can be written in JSON.
+
+For each template file that defines macros, a single JSON should be
+created that would look like this:
+
+```json
+{
+    "file": "macros.html",
+    "tests": [
+        {
+            "macro_name": "my_macro",
+            ...
+        },
+        { ... },
+    ]
+}
+```
+
+**`file`** is the template file. The test environment uses the same
+mechanism that Sheer uses to lookup template files, so the same file
+specification that's used within templates that use the macros.
+
+**`tests`** is a list of individual test case specifications. These
+corrospond to a single macro.
+
+The specification for a test case for an individual macro looks like
+this:
+
+```json
+{
+    "macro_name": "<a macro>",
+    "arguments": [ ... ],
+    "keyword_arguments": { ... },
+    "filters": {
+        "<filter name>": "<mock value>",
+        "<filter name>": ["<first call mock value>",
+                            "<second call mock value>", ...]
+    },
+    "context_functions": {
+        "<function name>": "<mock value>",
+        "<function name>": ["<first call mock value>",
+                            "<second call mock value>", ...]
+    },
+    "assertions": [
+        {
+            "selector": "<css selector>",
+            "index": <1>,
+            "value": "<string contained>"
+            "assertion": "<equal>",
+            "attribute": "<class>"
+        }
+    ]
+}
+```
+
+**`macro_name`** is simply the name of the macro within the file in which it
+is defined.
+
+**`arguments`** is a list of arguments to pass to the macro in the order
+they are given. This is optional.
+
+**`keyword_arguments`** is an object containing key/value arguments to pass
+to the macro if it requires keyword arguments. This is optional.
+
+**`filters`** is an object that is used to mock template system filters. 
+It contains the name of the filter to be mocked and the value that should
+be returned when that filter is used. The value can also be a list, in
+which case the order of the list will corropsond to the order in which
+the filter is called, i.e. if you want the filter to return `1` the
+first time it is called, but `2` the second time, the value would be
+`[1, 2]`. This is optional.
+
+*Note:* Here are some Sheer filters you may want to consider mocking:
+
+- `selected_filters_for_field`
+- `is_filter_selected`
+
+**`context_functions`** is an object that is used to mock template 
+context functions. It works the same way that `filters` does above, 
+with the values either being a return value for all calls or a list of 
+return values for each call. This is optional.
+
+*Note:* Here are some Sheer context functions you may want to consider
+mocking:
+
+- `queries`
+- `more_like_this`
+- `get_document`
+
+**`assertions`** defines the assertions to make about the result of
+rendering the macro. Assertion definitions take a CSS `selector`, an 
+`index` in the list of matches for that selector (default is `0`), an 
+`assertion` to make about the selected element or its `attribute` (if 
+given), and a `value` for comparison (if necessary for the assertion).
+
+The `assertion` can be any of the following:
+
+- `equal`
+- `not equal`
+- `exists`
+- `in`
+- `not in`
+
+Multiple test cases can be defined for the same macro, to test different
+behavior with different inputs, filter or context funciton output.
+
+### Defining Tests in Python
+
+If there is a more complex scenario you would like to test that cannot
+be described by the JSON specification format, you can create a test
+case in Python. 
+
+```python
+class MyMacrosTestCase(MyBaseTestCase):
+    def test_a_macro(self):
+        mock_filter(...)
+        mock_context_function(...)
+        result = self.render_macro('mymacros.html', 'amacro')
+        assert 'something' in result.select('.css-selector')[0]
+````
+
+### Running Tests
+
+Using the [`MyBaseTestCase` class defined above](#creating-a-base-testcase-class) 
+and loading tests [defined in JSON files](#defining-tests-in-json), the
+JSON files must be loaded into into a Python context. 
+
+For example, in a file called `template_tests.py`:
+
+```python
+from macropolo import JSONTestCaseLoader
+
+# Create MyTestCase subclasses for all JSON tests and add them to the
+# module's global context.
+tests_path = os.path.abspath(os.path.join(os.path.dirname( __file__ ), 'template_tests'))
+JSONTestCaseLoader(tests_path, MyBaseTestCase, globals())
+
+# Run the tests if we're executed
+if __name__ == '__main__':
+    unittest.main()
+```
+
+From there the file can be run as-is:
+
+```shell
+$ python template_tests.py
+```
+
+Or it can be run using other Python test runners like [nose](https://nose.readthedocs.org/en/latest/):
+
+```shell
+$ nosetests 
+```
+
+
+## API
+
+### `MacroTestCase`
+
+The `MacroTestCase` class is intended to capture test cases for
+macros on a modular basis, i.e. you would create one subclass of
+`MacroTestCase` for each template file containing macros. That
+That subclass can then include `test_[macro_name]()` methods that
+test each individual macro.
+
+This class requires a 
+[templating system environment mixin](#template-environment-mixins) 
+that provides `setup_environment()` that creates the templating
+system environment, `add_filter()` and `add_context()` which add
+filters and context name/values or functions to the template
+environment, and finally `render_macro()` which renders the macro
+using the template system and environment.
+
+`MacroTestCase` provides the following convenience methods:
+
+##### `mock_filter(filter, **values)`
+
+Mock a template filter. This will create a mock function for the
+filter that will return either a single value, or will return
+each of the given values in turn if there are more than one.
+
+##### `mock_context_function(func, **values)`
+
+Mock a context function. This will create a mock function that
+will return either a single value, or will return each of the
+given values in turn if there are more than one.
+
+##### `make_assertion(result, selector, index=0, value=None, assertion='exists', attribute='')`
+
+Make an assertion based on the BeautifulSoup result object.
+
+This method will find the given CSS selector, and make the given
+assertion about the attribute of selector's match at the given
+index. If the assertion requires a value to compare to, it should
+be given. If no attribute is given the assertion is made about
+the entire match.
+
+
+### Template Environment Mixins
+
+Template System environment mixin classes should provide four methods:
+
+##### `setup_environment()`
+
+This method should setup the templating system's environment.
+
+##### `render_macro(macro_file, macro, *args, **kwargs)`
+
+Render a given macro with the given arguments and keyword
+arguments. Should return a BeautifulSoup object.
+
+##### `add_filter(name, filter)`
+
+Add the given filter to the template environment.
+
+##### `add_context(name, value)`
+
+Add the given name/value to the template environment context.
+
+
+## Licensing 
+
+Public Domain/CC0 1.0
+
+1. [Terms](TERMS.md)
+2. [License](LICENSE)
 3. [CFPB Source Code Policy](https://github.com/cfpb/source-code-policy/)
 
 
-----
-
-## Credits and references
-
-1. Projects that inspired you
-2. Related projects
-3. Books, papers, talks, or other sources that have meaniginful impact or influence on this project 

@@ -1,5 +1,22 @@
 # Macro Polo
 
+- Macro Polo
+    - [Requirements](#requirements)
+    - [Installation](#installation)
+    - [Testing Macro Polo](#testing-macro-polo)
+    - [Unit Testing vs Functional Testing](#unit-testing-vs-functional-testing)
+- [Using Macro Polo](#using-macro-polo)
+    - [Quickstart](#quickstart)
+    - [Creating a Base TestCase Class](#creating-a-base-testcase-class)
+    - [Defining Tests in JSON](#defining-tests-in-json)
+    - [Defining Tests in Python](#defining-tests-in-python)
+    - [Running Tests](#running-tests)
+- [API](#api)
+    - [`MacroTestCase`](#macrotestcase)
+    - [Template Environment Mixins](#template-environment-mixins)
+- [Licensing](#licensing)
+
+
 Macro Polo is a Python library for unit testing template macros created 
 using popular Python templating systems.
 
@@ -10,7 +27,7 @@ Templating systems/environments currently supported:
 
 **Status:** Proof of concept
 
-## Requirements
+### Requirements
 
 Requirements can be satisfied with `pip`:
 
@@ -27,7 +44,7 @@ Template Systems/Environments:
 - [Jinja2](http://jinja.pocoo.org/)
 - [Sheer](https://github.com/cfpb/sheer)
 
-## Installation
+### Installation
 
 To clone and install Macro Polo locally in an existing Python 
 [`virtualenv`](https://virtualenv.pypa.io/en/latest/):
@@ -45,6 +62,19 @@ Macro Polo can also be installed directly from Github:
 
 ```shell
 $ pip install git+https://github.com/cfpb/macropolo
+```
+
+### Testing Macro Polo
+
+Macro Polo's own unit tests can be run from the root of the repository:
+
+```shell
+$ python setup.py test
+``` 
+
+Or using [nose](https://nose.readthedocs.org/en/latest/):
+```shell
+$ nosetests macropolo
 ```
 
 ### Unit Testing vs Functional Testing

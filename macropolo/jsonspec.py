@@ -7,10 +7,13 @@ from .macrotest import MacroTestCase
 
 def JSONSpecTestCaseFactory(name, super_class, json_file, mixins=[]):
     """
-    This factory allows the specification of test cases for Jinja2
-    macros in JSON files. This should simplify the creation of test
-    cases and reduce the amount of boilerplate Python that needs to be
-    written for such cases.
+    Creates a test case class of the given `name` with the given
+    `super_class` and `mixins` from JSON read from the given `json_file`.
+    The test case class is returned.
+
+    This factory and JSON specification for test cases are meant to
+    simplify the creation of test cases and reduce the amount of
+    boilerplate Python that needs to be written for such cases.
 
     Specification for a test case is:
         {
@@ -162,13 +165,9 @@ def JSONSpecTestCaseFactory(name, super_class, json_file, mixins=[]):
 def JSONTestCaseLoader(tests_path, super_class, context, recursive=False):
     """
     Load JSON specifications for Jinja2 macro test cases from the given
-    path and returns the resulting test classes.
-
-    This function will create a MacroTestCase subclass (using
-    JSONSpecMacrosTestCaseFactory) for each JSON file in the given path.
-
-    If `recursive` is True, it will also look in subdirectories. This is
-    not yet supported.
+    `tests_path`, calls `JSONSpecTestCaseFactory()` to create test case
+    classes with the given `super_class` from the JSON files, and adds the
+    resulting test case classes to the given `context` (i.e. `globals()`).
     """
 
     json_files = [f for f in os.listdir(tests_path) if f.endswith('.json')]

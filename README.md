@@ -13,6 +13,7 @@
 - [API](#api)
     - [`MacroTestCase`](#macrotestcase)
     - [Template Environment Mixins](#template-environment-mixins)
+    - [JSON Specification Functions](#json-specification-functions)
 - [Licensing](#licensing)
 
 
@@ -409,6 +410,20 @@ Add the given filter to the template environment.
 
 Add the given name/value to the template environment context.
 
+### JSON Specification Functions 
+
+#### `JSONTestCaseLoader(tests_path, super_class, context)`
+
+Load JSON specifications for Jinja2 macro test cases from the given
+`tests_path`, calls `JSONSpecTestCaseFactory()` to create test case
+classes with the given `super_class` from the JSON files, and adds the
+resulting test case classes to the given `context` (i.e. `globals()`).
+
+#### `JSONSpecTestCaseFactory(name, super_class, json_file, mixins=[])`
+
+Creates a test case class of the given `name` with the given
+`super_class` and `mixins` from JSON read from the given `json_file`.
+The test case class is returned.
 
 ## Licensing 
 

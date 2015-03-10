@@ -148,9 +148,9 @@ class MacroTestCaseMixin(object):
         except IndexError:
             selection_value = ''
 
-        if assertion == 'equal':
+        if assertion == 'equal' or assertion == 'equals':
             assert value == selection_value
-        elif assertion == 'not equal':
+        elif assertion == 'not equal' or assertion == 'not equals':
             assert value != selection_value
         elif assertion == 'exists':
             assert selection_value

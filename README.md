@@ -288,8 +288,8 @@ given), and a `value` for comparison (if necessary for the assertion).
 
 The `assertion` can be any of the following:
 
-- `equal`
-- `not equal`
+- `equal` or `equals`
+- `not equal` or `not equals`
 - `exists`
 - `in`
 - `not in`

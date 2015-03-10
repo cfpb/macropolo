@@ -114,6 +114,10 @@ class MacroTestCaseTestCase(unittest.TestCase):
             value='foo', assertion='equal', attribute='class')
         test_case.make_assertion(mock_result, '.foo', index=0,
             value='<span class="foo">Test Text</span>', assertion='equal')
+        test_case.make_assertion(mock_result_w_attr, '.foo', index=0,
+            value='foo', assertion='equals', attribute='class')
+        test_case.make_assertion(mock_result, '.foo', index=0,
+            value='<span class="foo">Test Text</span>', assertion='equals')
 
         # equals failing
         with self.assertRaises(AssertionError):
@@ -121,12 +125,20 @@ class MacroTestCaseTestCase(unittest.TestCase):
                 value='bar', assertion='equal', attribute='class')
             test_case.make_assertion(mock_result, '.foo', index=0,
                 value='<span>Test Text</span>', assertion='equal')
+            test_case.make_assertion(mock_result_w_attr, '.foo', index=0,
+                value='bar', assertion='equals', attribute='class')
+            test_case.make_assertion(mock_result, '.foo', index=0,
+                value='<span>Test Text</span>', assertion='equals')
 
         # not equal passing
         test_case.make_assertion(mock_result_w_attr, '.foo', index=0,
             value='foo bar', assertion='not equal', attribute='class')
         test_case.make_assertion(mock_result, '.foo', index=0,
             value='<span class="foo">Test</span>', assertion='not equal')
+        test_case.make_assertion(mock_result_w_attr, '.foo', index=0,
+            value='foo bar', assertion='not equals', attribute='class')
+        test_case.make_assertion(mock_result, '.foo', index=0,
+            value='<span class="foo">Test</span>', assertion='not equals')
 
         # not equal failing
         with self.assertRaises(AssertionError):
@@ -134,6 +146,10 @@ class MacroTestCaseTestCase(unittest.TestCase):
                 value='foo', assertion='not equal', attribute='class')
             test_case.make_assertion(mock_result, '.foo', index=0,
                 value='<span class="foo">Test Text</span>', assertion='not equal')
+            test_case.make_assertion(mock_result_w_attr, '.foo', index=0,
+                value='foo', assertion='not equals', attribute='class')
+            test_case.make_assertion(mock_result, '.foo', index=0,
+                value='<span class="foo">Test Text</span>', assertion='not equals')
 
         # exists passing
         test_case.make_assertion(mock_result_w_attr, '.foo', index=0,

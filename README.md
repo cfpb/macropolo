@@ -1,10 +1,9 @@
 # Macro Polo
 
-- Macro Polo
-    - [Why Macro Polo? Unit Testing vs Functional Testing](#why-macro-polo-unit-testing-vs-functional-testing)
-    - [Requirements](#requirements)
-    - [Installation](#installation)
-    - [Testing Macro Polo](#testing-macro-polo)
+- [Why Macro Polo? Unit Testing vs Functional Testing](#why-macro-polo-unit-testing-vs-functional-testing)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Testing Macro Polo](#testing-macro-polo)
 - [Using Macro Polo](#using-macro-polo)
     - [Quickstart](#quickstart)
     - [Creating a Base TestCase Class](#creating-a-base-testcase-class)
@@ -27,7 +26,7 @@ Templating systems/environments currently supported:
 
 **Status:** Proof of concept
 
-### Why Macro Polo? Unit Testing vs Functional Testing
+## Why Macro Polo? Unit Testing vs Functional Testing
 
 Macro Polo is designed for unit testing template macros. Macro Polo 
 is meant to make it easier to express tests of the resulting HTML of 
@@ -40,7 +39,7 @@ behavior that occurs within that template's resulting HTML, you want
 to investigate functional testing tools and frameworks.
 
 
-### Requirements
+## Requirements
 
 Requirements can be satisfied with `pip`:
 
@@ -57,7 +56,7 @@ Template Systems/Environments:
 - [Jinja2](http://jinja.pocoo.org/)
 - [Sheer](https://github.com/cfpb/sheer)
 
-### Installation
+## Installation
 
 To clone and install Macro Polo locally in an existing Python 
 [`virtualenv`](https://virtualenv.pypa.io/en/latest/):
@@ -77,7 +76,7 @@ Macro Polo can also be installed directly from Github:
 $ pip install git+https://github.com/cfpb/macropolo
 ```
 
-### Testing Macro Polo
+## Testing Macro Polo
 
 Macro Polo's own unit tests can be run from the root of the repository:
 

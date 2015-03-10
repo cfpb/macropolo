@@ -1,10 +1,10 @@
 # Macro Polo
 
 - Macro Polo
+    - [Why Macro Polo? Unit Testing vs Functional Testing](#why-macro-polo-unit-testing-vs-functional-testing)
     - [Requirements](#requirements)
     - [Installation](#installation)
     - [Testing Macro Polo](#testing-macro-polo)
-    - [Unit Testing vs Functional Testing](#unit-testing-vs-functional-testing)
 - [Using Macro Polo](#using-macro-polo)
     - [Quickstart](#quickstart)
     - [Creating a Base TestCase Class](#creating-a-base-testcase-class)
@@ -23,9 +23,22 @@ using popular Python templating systems.
 Templating systems/environments currently supported:
 
 - [Jinja2](http://jinja.pocoo.org/)
-- [Jinja2 Templates served via Sheer](https://github.com/cfpb/sheer)
+- Jinja2 Templates served via [Sheer](https://github.com/cfpb/sheer)
 
 **Status:** Proof of concept
+
+### Why Macro Polo? Unit Testing vs Functional Testing
+
+Macro Polo is designed for unit testing template macros. Macro Polo 
+is meant to make it easier to express tests of the resulting HTML of 
+individual template macros (units) within a specific context or with
+specific inputs. Unit testing macros tests them individually in 
+isolation. 
+
+If you're looking at a template and want to test JavaScript-related 
+behavior that occurs within that template's resulting HTML, you want 
+to investigate functional testing tools and frameworks.
+
 
 ### Requirements
 
@@ -76,18 +89,6 @@ Or using [nose](https://nose.readthedocs.org/en/latest/):
 ```shell
 $ nosetests macropolo
 ```
-
-### Unit Testing vs Functional Testing
-
-Macro Polo is designed for unit testing template macros. Macro Polo 
-is meant to make it easier to express tests of the resulting HTML of 
-individual template macros (units) within a specific context or with
-specific inputs. Unit testing macros tests them individually in 
-isolation. 
-
-If you're looking at a template and want to test JavaScript-related 
-behavior that occurs within that template's resulting HTML, you want 
-to investigate functional testing tools and frameworks.
 
 ## Using Macro Polo
 
@@ -144,11 +145,11 @@ Test Case classes should inherit from a
 [`MacroTestCase`](#macrotestcase) class, and should provide the 
 following methods:
 
-##### `search_root()`
+#### `search_root()`
 
 Return the root of the search path for templates.
 
-##### `search_exceptions()`
+#### `search_exceptions()`
 
 Return a list of a subdirectory names that should not be searched
 for templates.
@@ -366,19 +367,19 @@ using the template system and environment.
 
 `MacroTestCase` provides the following convenience methods:
 
-##### `mock_filter(filter, **values)`
+#### `mock_filter(filter, **values)`
 
 Mock a template filter. This will create a mock function for the
 filter that will return either a single value, or will return
 each of the given values in turn if there are more than one.
 
-##### `mock_context_function(func, **values)`
+#### `mock_context_function(func, **values)`
 
 Mock a context function. This will create a mock function that
 will return either a single value, or will return each of the
 given values in turn if there are more than one.
 
-##### `make_assertion(result, selector, index=0, value=None, assertion='exists', attribute='')`
+#### `make_assertion(result, selector, index=0, value=None, assertion='exists', attribute='')`
 
 Make an assertion based on the BeautifulSoup result object.
 
@@ -393,20 +394,20 @@ the entire match.
 
 Template System environment mixin classes should provide four methods:
 
-##### `setup_environment()`
+#### `setup_environment()`
 
 This method should setup the templating system's environment.
 
-##### `render_macro(macro_file, macro, *args, **kwargs)`
+#### `render_macro(macro_file, macro, *args, **kwargs)`
 
 Render a given macro with the given arguments and keyword
 arguments. Should return a BeautifulSoup object.
 
-##### `add_filter(name, filter)`
+#### `add_filter(name, filter)`
 
 Add the given filter to the template environment.
 
-##### `add_context(name, value)`
+#### `add_context(name, value)`
 
 Add the given name/value to the template environment context.
 

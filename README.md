@@ -34,10 +34,9 @@ individual template macros (units) within a specific context or with
 specific inputs. Unit testing macros tests them individually in 
 isolation. 
 
-If you're looking at a template and want to test JavaScript-related 
-behavior that occurs within that template's resulting HTML, you want 
-to investigate functional testing tools and frameworks.
-
+If you're looking at a template and want to test browser-related 
+behavior that occurs when interacting with that template's resulting 
+HTML, you want to investigate functional testing tools and frameworks.
 
 ## Requirements
 

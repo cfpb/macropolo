@@ -3,7 +3,7 @@
 import os
 import json
 
-from .macrotest import MacroTestCase
+from .macrotestcase import MacroTestCase
 
 def JSONSpecTestCaseFactory(name, super_class, json_file, mixins=[]):
     """

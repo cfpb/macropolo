@@ -84,7 +84,14 @@ Macro Polo's own unit tests can be run from the root of the repository:
 $ python setup.py test
 ``` 
 
-Or using [nose](https://nose.readthedocs.org/en/latest/):
+If you would prefer to use [nose](https://nose.readthedocs.org/en/latest/):
+
+```shell
+$ pip install nose
+```
+
+Then you can run the tests:
+
 ```shell
 $ nosetests macropolo
 ```

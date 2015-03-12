@@ -349,9 +349,16 @@ $ python template_tests.py
 Or it can be run using other Python test runners like [nose](https://nose.readthedocs.org/en/latest/):
 
 ```shell
+$ pip install nose
 $ nosetests 
 ```
 
+Or [py.test](http://pytest.org/latest/)
+
+```shell
+$ pip install pytest
+$ py.test
+```
 
 ## API
 

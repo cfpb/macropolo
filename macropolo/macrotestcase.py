@@ -1,12 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import unittest
-import os, os.path
 import mock
-
-# We'll use BeautifulSoup to make assertions about the HTML resulting from
-# macros
-from bs4 import BeautifulSoup
 
 class MacroTestCaseMixin(object):
     """

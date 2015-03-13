@@ -10,7 +10,7 @@ from jinja2 import Environment, FileSystemLoader
 
 class Jinja2Environment(object):
     """
-    Jinja2 marco test environment mixin for `MacroTestCase`
+    Jinja2 macro test environment mixin for `MacroTestCase`
     """
 
     def setup_environment(self):

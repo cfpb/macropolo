@@ -1,13 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import os
-
-# We'll use BeautifulSoup to make assertions about the HTML resulting from
-# macros
-from bs4 import BeautifulSoup
-
-# Try to provide a SheerEnvironment if Sheer is installed.
-from sheer.utility import build_search_path
 from sheer.templates import date_formatter
 import markdown
 

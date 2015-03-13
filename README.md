@@ -367,7 +367,7 @@ $ py.test
 The `MacroTestCase` class is intended to capture test cases for
 macros on a modular basis, i.e. you would create one subclass of
 `MacroTestCase` for each template file containing macros. That
-That subclass can then include `test_[macro_name]()` methods that
+subclass can then include `test_[macro_name]()` methods that
 test each individual macro.
 
 This class requires a 

@@ -53,8 +53,14 @@ $ pip install -r requirements.txt
   template filters and context (and unit testing Macro Polo itself)
 
 Template Systems/Environments:
+
 - [Jinja2](http://jinja.pocoo.org/)
 - [Sheer](https://github.com/cfpb/sheer)
+
+These are not installed by `pip`. It is expected that if you are using
+these template environments you have them installed already. If not,
+their respective [environment mixins](#template-environment-mixins) will 
+not be available.
 
 ## Installation
 

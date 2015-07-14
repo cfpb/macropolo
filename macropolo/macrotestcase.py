@@ -33,7 +33,6 @@ class MacroTestCaseMixin(object):
         """
         raise NotImplementedError("please mixin an environment class")
 
-
     def render_macro(self, macro_file, macro, *args, **kwargs):
         """
         Render a given macro with the given arguments and keyword
@@ -41,13 +40,11 @@ class MacroTestCaseMixin(object):
         """
         raise NotImplementedError("please mixin an environment class")
 
-
     def add_filter(self, name, filter):
         """
         Add the given filter to the template environment.
         """
         raise NotImplementedError("please mixin an environment class")
-
 
     def add_context(self, name, value):
         """
@@ -55,30 +52,35 @@ class MacroTestCaseMixin(object):
         """
         raise NotImplementedError("please mixin an environment class")
 
+    def add_template_macro(self, name, macro_name, contents):
+        """
+        Add the given name as a template in the environment with the
+        given macro name and contents.
+        """
+        raise NotImplementedError("please mixin an environment class")
 
     def search_root(self):
         """
         Return the root of the search path for templates.
         """
-        raise NotImplementedError("please provide a search_root() in your MacroTestCase subclass")
-
+        raise NotImplementedError("please provide a search_root() in "
+                "your MacroTestCase subclass")
 
     def search_exceptions(self):
         """
         Return a list of a subdirectory names that should not be searched
         for templates.
         """
-        raise NotImplementedError("please provide a search_root() in your MacroTestCase subclass")
-
+        raise NotImplementedError("please provide a self.search_exceptions() "
+                "in your MacroTestCase subclass")
 
     def setUp(self):
         self.setup_environment()
 
-
     def mock_filter(self, filter, *values):
         """
         Mock a template filter. This will create a mock function for the
-        filter that will return either a single value, or will return
+        filter that will return either a single value or will return
         each of the given values in turn if there are more than one.
 
         Sheer filters you might want to mock:
@@ -95,11 +97,10 @@ class MacroTestCaseMixin(object):
 
         self.add_filter(filter, mock_filter)
 
-
     def mock_context_function(self, func, *values):
         """
         Mock a context function. This will create a mock function that
-        will return either a single value, or will return each of the
+        will return either a single value or will return each of the
         given values in turn if there are more than one.
 
         Sheer context functions you might want to mock:
@@ -116,6 +117,13 @@ class MacroTestCaseMixin(object):
 
         self.add_context(func, mock_func)
 
+    def mock_template_macro(self, name, macro_name, contents):
+        """
+        Mock calls to a macro in another template. 
+        
+        Implementation details may varry between templating systems.
+        """
+        self.add_template_macro(name, macro_name, contents)
 
     def make_assertion(self, result, selector, index=0,
                        value=None, assertion='exists', attribute=''):
@@ -139,7 +147,8 @@ class MacroTestCaseMixin(object):
                 try:
                     selection_value = selection[index].get(attribute)[0]
                 except TypeError:
-                    raise AssertionError("attribute '%s' does not exist or is empty" % attribute)
+                    raise AssertionError("attribute '%s' does not exist "
+                            "or is empty" % attribute)
         except IndexError:
             selection_value = ''
 

@@ -228,6 +228,7 @@ this:
 ```json
 {
     "macro_name": "<a macro>",
+    "skip": <true or false>,
     "arguments": [ ... ],
     "keyword_arguments": { ... },
     "context": {
@@ -265,6 +266,8 @@ this:
 
 **`macro_name`** is simply the name of the macro within the file in which it
 is defined.
+
+**`skip`**, if true, will skip the macro test. This is optional.
 
 **`arguments`** is a list of arguments to pass to the macro in the order
 they are given. This is optional.

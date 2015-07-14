@@ -165,10 +165,13 @@ def JSONSpecTestCaseFactory(name, super_class, json_file, mixins=[]):
     for t in spec['tests']:
         # Create the test method and add it to the class dictionary
         macro_name = t['macro_name']
-
         method_name = 'test_' + str(spec['tests'].index(t)) + macro_name
-
         test_method = create_test_method(macro_file, macro_name, t)
+
+        if t.get('skip', False):
+            test_method = unittest.skip(
+                    "skipping {}".format(macro_name))(test_method)
+
         newclass_dict[method_name] = test_method
 
     # Create and return the new class.

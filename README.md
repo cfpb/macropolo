@@ -228,6 +228,7 @@ this:
 ```json
 {
     "macro_name": "<a macro>",
+    "skip": <true or false>,
     "arguments": [ ... ],
     "keyword_arguments": { ... },
     "context": {
@@ -244,6 +245,13 @@ this:
         "<function name>": ["<first call mock value>",
                             "<second call mock value>", ...]
     },
+    "templates": {
+        "<template file>": {
+            "<macro name>(<arguments>)": "<mock value>",
+            "<macro name>()": ["<first call mock value>",
+                            "<second call mock value>", ...]
+        }
+    },
     "assertions": [
         {
             "selector": "<css selector>",
@@ -258,6 +266,8 @@ this:
 
 **`macro_name`** is simply the name of the macro within the file in which it
 is defined.
+
+**`skip`**, if true, will skip the macro test. This is optional.
 
 **`arguments`** is a list of arguments to pass to the macro in the order
 they are given. This is optional.
@@ -293,6 +303,15 @@ mocking:
 - `more_like_this`
 - `get_document`
 
+**`templates`** is an object that is used to mock included template
+macros called from within the macro being tested. It works the same 
+way that `filters` and `context_functions` do above, with the values 
+either being a return value for all calls or a list of return values 
+for each call.  The `<macro name>` should include parenthesis and any 
+arguments the template's macro takes. This will override *the entire 
+`<template file>`*, so make sure to mock all of its macros.  This is 
+optional.
+
 **`assertions`** defines the assertions to make about the result of
 rendering the macro. Assertion definitions take a CSS `selector`, an 
 `index` in the list of matches for that selector (default is `0`), an 
@@ -319,8 +338,8 @@ case in Python.
 ```python
 class MyMacrosTestCase(MyBaseTestCase):
     def test_a_macro(self):
-        mock_filter(...)
-        mock_context_function(...)
+        self.mock_filter(...)
+        self.mock_context_function(...)
         result = self.render_macro('mymacros.html', 'amacro')
         assert 'something' in result.select('.css-selector')[0]
 ````

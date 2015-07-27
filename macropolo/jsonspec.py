@@ -34,6 +34,13 @@ def JSONSpecTestCaseFactory(name, super_class, json_file, mixins=[]):
                 "<function name>": ["<first call mock value>",
                                     "<second call mock value>", ...]
             },
+            "templates": {
+                "<template file>: {
+                    "<macro name>": "<mock value>",
+                    "<macro name>"": ["<first call mock value>",
+                                    "<second call mock value>", ...]
+                }
+            },
             "assertions": [
                 {
                     "selector": "<css selector>",
@@ -51,8 +58,8 @@ def JSONSpecTestCaseFactory(name, super_class, json_file, mixins=[]):
     a value for comparison (if necessary for the assertion), and, if
     necessary, the attribute on the selected element to compare to.
 
-    "arguments", "keyword_arguments", "filters", and
-    "context_functions" are optional.
+    "arguments", "keyword_arguments", "filters", "context_functions", 
+    and "template" are optional.
 
     Assertions can be any of the following:
         * equal
@@ -101,6 +108,9 @@ def JSONSpecTestCaseFactory(name, super_class, json_file, mixins=[]):
             [self.mock_filter(f, v) for f,v in filters.items()]
             context_functions = test_dict.get('mock_context_functions', {})
             [self.mock_context_function(f, v) for f,v in context_functions.items()]
+            templates = test_dict.get('templates', {})
+            [[self.mock_template_macro(n, m, c) for m, c in d.items()] 
+                    for n, d in templates.items()]
 
             # Render the macro from the macro file with the given
             # arguments
@@ -141,7 +151,11 @@ def JSONSpecTestCaseFactory(name, super_class, json_file, mixins=[]):
         return test_method
 
     # Open and read the JSON spec file
-    spec = uniconvert(json.loads(open(json_file).read()))
+    try:
+        spec = uniconvert(json.loads(open(json_file).read()))
+    except ValueError as e:
+        e.args += (' in ' + json_file,)
+        raise
 
     # This will be our new class's dict containing all its methods, etc
     newclass_dict = {}
@@ -151,10 +165,13 @@ def JSONSpecTestCaseFactory(name, super_class, json_file, mixins=[]):
     for t in spec['tests']:
         # Create the test method and add it to the class dictionary
         macro_name = t['macro_name']
-
         method_name = 'test_' + str(spec['tests'].index(t)) + macro_name
-
         test_method = create_test_method(macro_file, macro_name, t)
+
+        if t.get('skip', False):
+            test_method = unittest.skip(
+                    "skipping {}".format(macro_name))(test_method)
+
         newclass_dict[method_name] = test_method
 
     # Create and return the new class.

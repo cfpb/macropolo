@@ -12,8 +12,8 @@ class MacroTestCaseTestCase(unittest.TestCase):
 
     def test_mock_filter(self):
         """
-        Test that mock_filter appropriate returns a mock filter with
-        either a single return value or a set of side effects.
+        Test that mock_filter returns a mock filter with either a single
+        return value or a set of side effects.
         """
         # mock_filter() calls the add_filter() method which is defined by
         # environments. Mock that method and we'll get the filter to
@@ -42,12 +42,10 @@ class MacroTestCaseTestCase(unittest.TestCase):
         self.assertEqual(call_args[1](), '3')
         self.assertEqual(call_args[1](), '4')
 
-
     def test_mock_context_function(self):
         """
-        Test that mock_context_function appropriate returns a mock
-        context function with either a single return value or a set
-        of side effects.
+        Test that mock_context_function returns a mock context function
+        with either a single return value or a set of side effects.
         """
         # mock_context_function() calls the add_context() method which
         # is defined by environments. Mock that method and we'll get
@@ -75,7 +73,6 @@ class MacroTestCaseTestCase(unittest.TestCase):
         self.assertEqual(call_args[1](), '2')
         self.assertEqual(call_args[1](), '3')
         self.assertEqual(call_args[1](), '4')
-
 
     def test_make_assertion(self):
         """

@@ -21,9 +21,9 @@ class SheerEnvironment(Jinja2Environment):
         # macro-by-macro basis. Using lambdas here for brevity.
         # XXX: We should change Sheer to make it easier to replicate its
         # environment.
-        self.env.filters['date'] = lambda value, format="%Y-%m-%d": \
-            date_formatter(value, format)
-        self.env.filters['markdown'] = lambda raw_text: \
+        self.filters['date'] = lambda value, format="%Y-%m-%d", \
+                tz="America/New_York": date_formatter(value, format)
+        self.filters['markdown'] = lambda raw_text: \
             markdown.markdown(raw_text)
 
 

@@ -94,6 +94,6 @@ class Jinja2Environment(object):
         test_template = self.env.from_string(test_template_str)
 
         result = test_template.render(self.context)
-        return BeautifulSoup(result)
+        return BeautifulSoup(result, "html.parser")
 
 

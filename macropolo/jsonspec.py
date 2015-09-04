@@ -115,7 +115,15 @@ def JSONSpecTestCaseFactory(name, super_class, json_file, mixins=[]):
             # Render the macro from the macro file with the given
             # arguments
             args = test_dict.get('arguments', [])
+
+            # kwargs can optionally be specified seperately from args
             kwargs = test_dict.get('keyword_arguments', {})
+
+            # If args is a dict it specifies keyword arguments.
+            # Otherwise assume it's a list of arguments.
+            if isinstance(args, dict):
+                kwargs = args
+                args = []
 
             result = self.render_macro(macro_file, macro_name,
                                     *args, **kwargs)

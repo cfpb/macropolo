@@ -270,7 +270,9 @@ is defined.
 **`skip`**, if true, will skip the macro test. This is optional.
 
 **`arguments`** is a list of arguments to pass to the macro in the order
-they are given. This is optional.
+they are given. Can be either a list or a JSON object of keys/values; if 
+it is a JSON object of keys/values, it is presumed to be keyword 
+arguments. This is optional.
 
 **`keyword_arguments`** is an object containing key/value arguments to pass
 to the macro if it requires keyword arguments. This is optional.

@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='macropolo',
-    version='0.1.0',
+    version='0.3.0',
     author='CFPB',
     author_email='tech@cfpb.gov',
     packages=find_packages(),

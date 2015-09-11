@@ -3,6 +3,7 @@
 import unittest
 import mock
 
+
 class MacroTestCaseMixin(object):
     """
     The `MacroTestCase` class is intended to capture test cases for
@@ -64,7 +65,7 @@ class MacroTestCaseMixin(object):
         Return the root of the search path for templates.
         """
         raise NotImplementedError("please provide a search_root() in "
-                "your MacroTestCase subclass")
+                                  "your MacroTestCase subclass")
 
     def search_exceptions(self):
         """
@@ -72,7 +73,7 @@ class MacroTestCaseMixin(object):
         for templates.
         """
         raise NotImplementedError("please provide a self.search_exceptions() "
-                "in your MacroTestCase subclass")
+                                  "in your MacroTestCase subclass")
 
     def setUp(self):
         self.setup_environment()
@@ -119,8 +120,8 @@ class MacroTestCaseMixin(object):
 
     def mock_template_macro(self, name, macro_name, contents):
         """
-        Mock calls to a macro in another template. 
-        
+        Mock calls to a macro in another template.
+
         Implementation details may varry between templating systems.
         """
         self.add_template_macro(name, macro_name, contents)
@@ -139,8 +140,9 @@ class MacroTestCaseMixin(object):
 
         selection = result.select(selector)
 
-        # Get the value we're making assertions about. It's either the selection
-        # itself or the value of the given attribute on the selection.
+        # Get the value we're making assertions about. It's either the
+        # selection itself or the value of the given attribute on the
+        # selection.
         try:
             selection_value = selection[index]
             if attribute:
@@ -148,7 +150,7 @@ class MacroTestCaseMixin(object):
                     selection_value = selection[index].get(attribute)[0]
                 except TypeError:
                     raise AssertionError("attribute '%s' does not exist "
-                            "or is empty" % attribute)
+                                         "or is empty" % attribute)
         except IndexError:
             selection_value = ''
 
@@ -170,5 +172,3 @@ class MacroTestCase(MacroTestCaseMixin, unittest.TestCase):
     """
     """
     pass
-
-

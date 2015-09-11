@@ -22,7 +22,8 @@ class Jinja2Environment(object):
         search_root = self.search_root()
         search_exceptions = self.search_exceptions()
         self.search_paths = [x[0] for x in os.walk(search_root)
-                                if not x[0].startswith('_') or x[0].startswith('.') or
+                                if not x[0].startswith('_') or
+                                    x[0].startswith('.') or
                                     x[0] in search_exceptions]
         self.filters = {}
         self.context = {}
@@ -64,14 +65,14 @@ class Jinja2Environment(object):
         for name in self.templates:
             macros = []
             for macro_name in self.templates[name]:
-                m = """ 
+                m = """
                     {{% macro {macro_name} %}}{macro_contents}{{% endmacro %}}
-                """.format(macro_name=macro_name, 
-                        macro_contents=self.templates[name][macro_name])
+                """.format(macro_name=macro_name,
+                           macro_contents=self.templates[name][macro_name])
                 macros.append(m)
             mock_templates[name] = "\n".join(macros)
 
-        # Build an environment 
+        # Build an environment
         fs_loader = FileSystemLoader(self.search_paths)
         mock_template_loader = DictLoader(mock_templates)
         self.env = Environment(loader=ChoiceLoader(
@@ -82,8 +83,9 @@ class Jinja2Environment(object):
         # We need to format args and kwargs as string arguments for the macro.
         # After that we combine them. filter() is used in case one or the other
         # strings is empty, ''.
-        str_args = u', '.join('%r'.encode('utf-8') % a for a in args).encode('utf-8')
-        str_kwargs = u', '.join('%s=%r' % x for x in kwargs.iteritems())
+        str_args = u', '.join(unicode(a) for a in args)
+        str_kwargs = u', '.join(u'{}={}'.format(k, v)
+                                for k, v in kwargs.items())
         str_combined = u', '.join(filter(None, [str_args, str_kwargs]))
 
         # Here is our test template that uses the macro.
@@ -95,5 +97,3 @@ class Jinja2Environment(object):
 
         result = test_template.render(self.context)
         return BeautifulSoup(result, "html.parser")
-
-

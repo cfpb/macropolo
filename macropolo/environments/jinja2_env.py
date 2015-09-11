@@ -83,16 +83,19 @@ class Jinja2Environment(object):
         # We need to format args and kwargs as string arguments for the macro.
         # After that we combine them. filter() is used in case one or the other
         # strings is empty, ''.
-        str_args = u', '.join(unicode(a) for a in args)
-        str_kwargs = u', '.join(u'{}={}'.format(k, v)
+        str_args = u', '.join(u'{!r}'.format(a) for a in args)
+        str_kwargs = u', '.join(u'{!s}={!r}'.format(k, v)
                                 for k, v in kwargs.items())
         str_combined = u', '.join(filter(None, [str_args, str_kwargs]))
 
         # Here is our test template that uses the macro.
         test_template_str = u'''
             {{% import "{macro_file}" as m with context %}}
-            {{{{m.{macro}({args}) }}}}
+            {{{{ m.{macro}({args}) }}}}
         '''.format(macro_file=macro_file, macro=macro, args=str_combined)
+
+        print(test_template_str)
+
         test_template = self.env.from_string(test_template_str)
 
         result = test_template.render(self.context)

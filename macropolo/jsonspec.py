@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import sys
 import os
 import json
 import unittest
@@ -91,7 +92,8 @@ def JSONSpecTestCaseFactory(name, super_class, json_file, mixins=[]):
                     for key, value in input.iteritems()}
         elif isinstance(input, list):
             return [uniconvert(element) for element in input]
-        elif isinstance(input, unicode):
+        # UGH!
+        elif sys.version_info < (3,) and isinstance(input, unicode):
             return input.encode('utf-8')
         else:
             return input

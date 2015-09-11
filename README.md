@@ -1,5 +1,7 @@
 # Macro Polo
 
+[![Build Status](https://travis-ci.org/cfpb/macropolo.png)](https://travis-ci.org/cfpb/macropolo)
+
 - [Why Macro Polo? Unit Testing vs Functional Testing](#why-macro-polo-unit-testing-vs-functional-testing)
 - [Requirements](#requirements)
 - [Installation](#installation)

@@ -2,7 +2,7 @@
 
 import unittest
 import mock
-from StringIO import StringIO
+from io import StringIO
 
 from macropolo import MacroTestCaseMixin
 from macropolo.environments import Jinja2Environment

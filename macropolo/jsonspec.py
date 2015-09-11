@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
+import sys
 import os
 import json
+import unittest
 
-from .macrotestcase import MacroTestCase
 
 def JSONSpecTestCaseFactory(name, super_class, json_file, mixins=[]):
     """
@@ -82,32 +83,36 @@ def JSONSpecTestCaseFactory(name, super_class, json_file, mixins=[]):
             ]
         }
     """
-    # This is a function to convert unicode() objects to str() objects that are
-    # unicode-encoded. This should above output in our template like "u'foo'"
-    # which Jinja2 can't understand.
+    # This is a function to convert unicode() objects to str() objects that 
+    # are unicode-encoded. This should above output in our template like 
+    # "u'foo'" which Jinja2 can't understand.
     def uniconvert(input):
         if isinstance(input, dict):
-            return {uniconvert(key): uniconvert(value) for key, value in input.iteritems()}
+            return {uniconvert(key): uniconvert(value) 
+                    for key, value in input.iteritems()}
         elif isinstance(input, list):
             return [uniconvert(element) for element in input]
-        elif isinstance(input, unicode):
+        # UGH!
+        elif sys.version_info < (3,) and isinstance(input, unicode):
             return input.encode('utf-8')
         else:
             return input
 
-    # This function will return a function that can be assigned as a test method
-    # for a macro with the given name in the given file with the give test_dict
-    # from the JSON spec.
+    # This function will return a function that can be assigned as a test 
+    # method for a macro with the given name in the given file with the give 
+    # test_dict from the JSON spec.
     def create_test_method(macro_file, macro_name, test_dict):
         def test_method(self):
             # Add any context variables to the context
-            [self.add_context(k, v) for k,v in test_dict.get('context', {}).items()]
+            [self.add_context(k, v) 
+                    for k, v in test_dict.get('context', {}).items()]
 
             # Mock the filters and context functions
             filters = test_dict.get('mock_filters', {})
-            [self.mock_filter(f, v) for f,v in filters.items()]
+            [self.mock_filter(f, v) for f, v in filters.items()]
             context_functions = test_dict.get('mock_context_functions', {})
-            [self.mock_context_function(f, v) for f,v in context_functions.items()]
+            [self.mock_context_function(f, v) 
+                    for f, v in context_functions.items()]
             templates = test_dict.get('templates', {})
             [[self.mock_template_macro(n, m, c) for m, c in d.items()] 
                     for n, d in templates.items()]
@@ -126,7 +131,7 @@ def JSONSpecTestCaseFactory(name, super_class, json_file, mixins=[]):
                 args = []
 
             result = self.render_macro(macro_file, macro_name,
-                                    *args, **kwargs)
+                                       *args, **kwargs)
 
             # Loop over the assertions given for the test and make them.
             for a in test_dict.get('assertions', []):
@@ -151,8 +156,8 @@ def JSONSpecTestCaseFactory(name, super_class, json_file, mixins=[]):
                     assertion_str += '"' + assertion + '" "' + \
                         selector + '" selection '
 
-                    e.args += (assertion_str + \
-                               'failed in macro ' + macro_name + \
+                    e.args += (assertion_str + 
+                               'failed in macro ' + macro_name + 
                                ' in ' + macro_file,)
                     raise e
 
@@ -178,7 +183,7 @@ def JSONSpecTestCaseFactory(name, super_class, json_file, mixins=[]):
 
         if t.get('skip', False):
             test_method = unittest.skip(
-                    "skipping {}".format(macro_name))(test_method)
+                "skipping {}".format(macro_name))(test_method)
 
         newclass_dict[method_name] = test_method
 
@@ -200,7 +205,8 @@ def JSONTestCaseLoader(tests_path, super_class, context, recursive=False):
         # Create a camelcased name for the test. This is a minor thing, but I
         # think it's nice.
         name, extension = os.path.splitext(json_file)
-        class_name = ''.join(x for x in name.title() if x not in ' _-') + 'TestCase'
+        class_name = ''.join(x for x in name.title() if x not in ' _-') \
+                + 'TestCase'
 
         # Get the full path to the file and create a test class
         json_file_path = os.path.join(tests_path, json_file)
@@ -209,5 +215,3 @@ def JSONTestCaseLoader(tests_path, super_class, context, recursive=False):
                                              json_file_path)
         # Add the test class to globals() so that unittest.main() picks it up
         context[class_name] = test_class
-
-

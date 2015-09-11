@@ -1,0 +1,10 @@
+language: python
+sudo: false
+python:
+    - "2.7"
+    - "3.4"
+install:
+    - pip install -r requirements.txt --use-mirrors
+    - pip install -r requirements_test.txt --use-mirrors
+before_script: "flake8 macropolo --ignore=E127,E128,W291,F821 --exclude=macropolo/tests"
+script: "nosetests macropolo --with-coverage --cover-package macropolo"

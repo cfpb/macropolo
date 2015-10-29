@@ -94,8 +94,6 @@ class Jinja2Environment(object):
             {{{{ m.{macro}({args}) }}}}
         '''.format(macro_file=macro_file, macro=macro, args=str_combined)
 
-        print(test_template_str)
-
         test_template = self.env.from_string(test_template_str)
 
         result = test_template.render(self.context)
